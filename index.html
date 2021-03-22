@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Guessing</title>
+		<link rel="icon" href="favicon.ico" type="image/x-icon" />
+		<link rel="apple-touch-icon" href="favicon.ico" />
+		<link rel="apple-touch-icon-precomposed" href="favicon.ico" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+		<meta name="viewport" content="user-scalable=no, width=device-width" />
+		<meta name="viewport" content="minimum-scale=1.0,width=device-width,maximum-scale=1,user-scalable=no" />
+		<style>
+			body {text-align:center;font-family:arial}
+			div {font-size:10vh;margin:3vh auto;}
+			ul {padding:0;font-size:3vh;margin:0 auto;}
+			li {cursor:pointer;text-transform:uppercase;list-style:none;border:solid grey 1px;width:50%;padding:2vh;margin:6vh auto}
+		</style>
+	</head>
+	<body>
+		<div id="word"></div>
+		<ul></ul>
+		<script>
+			const source = {
+				'apple'		: '&#127822;',	'avocado'	: '&#129361;',	'banana'	: '&#127820;',
+				'baloon'	: '&#127880;',	'bell'		: '&#128276;',	'bicycle'	: '&#128690;',
+				'bikini'	: '&#128089;',	'black'		: '&#11035;',	'blue' 		: '&#128998;',
+				'book'		: '&#128213;',	'broccoli' 	: '&#129382;',	'brain'		: '&#129504;',
+				'brown' 	: '&#129003;',	'bus'		: '&#128652;',	'cactus'	: '&#127797;',
+				'camera'	: '&#128247;',	'candle'	: '&#128367;',	'candy' 	: '&#127852;',
+				'car'		: '&#128663;',	'carrot' 	: '&#129365;',	'chair'		: '&#129681;',
+				'cheese' 	: '&#129472;',	'clown'		: '&#129313;',	'cupcake' 	: '&#129473;',
+				'diamond'	: '&#128142;',	'doughnut' 	: '&#127849;',	'ear'		: '&#128066;',
+				'eye'		: '&#128065;',	'ghost'		: '&#128123;',	'grapes' 	: '&#127815;',
+				'green' 	: '&#129001;',	'guitar'	: '&#127928;',	'hamburger' : '&#127828; ',
+				'hammer'	: '&#128296;',	'ice cream' : '&#127846;',	'key'		: '&#128273;',
+				'knife'		: '	&#128298;',	'lollipop' 	: '&#127853;',	'mushroom' 	: '&#127812;',
+				'pencil'	: '&#9999;',	'pineapple' : '&#127821;',	'pizza' 	: '&#127829;',
+				'popcorn' 	: '&#127871;',	'potato' 	: '&#129364;',	'purple' 	: '&#129002;',
+				'rainbow'	: '&#127752;',	'red' 		: '&#128997;',	'ring'		: '&#128141;',
+				'rocket'	: '&#128640;',	'star' 		: '&#11088;',	'shoe'		: '&#128094;',
+				'snowman'	: '&#9924;',	'tree'		: '&#127796;',	'truck'		: '&#128666;',
+				'tomato' 	: '&#127813;',	'toilet'	: '&#128701;',	'umbrella'	: '	&#9730;',
+				'violin'	: '&#127931;',	'yellow' 	: '&#129000;'
+			};
+
+			var shuffled, selected, index = 0, timer, 
+			speak = (txt) => {
+				var word = new SpeechSynthesisUtterance(txt)
+				word.lang = 'en';
+				word.rate = 1;
+				speechSynthesis.speak(word);
+			},
+			shuffling = (arr) => {
+				return arr.sort(()=>Math.random()-.5);
+				
+			},
+			showing = () => {
+				var choices = [].concat(shuffled), li = '';
+				selected = shuffled[index];
+				document.getElementById('word').innerHTML = source[selected];
+
+				choices.sort(()=>Math.random()-.5);
+				choices.splice(choices.indexOf(selected),1);
+				choices = choices.slice(0,3);
+				choices.unshift(selected);
+				choices = shuffling(choices);
+				for(i in choices){
+					li += "<li onclick=\"answer('"+choices[i]+"')\">"+choices[i]+"</li>";
+				}
+				document.getElementsByTagName('ul')[0].innerHTML = li;
+			},
+			congratulation = () => {
+				timer = setTimeout(function(){
+					document.body.style.backgroundColor = document.body.style.backgroundColor=="white"?"whitesmoke":"white";
+					congratulation();
+				},200);
+			},
+			answer = (item) => {
+				if(item == selected){
+					congratulation();
+					speak(item + '. Congratulation');
+					index++;
+					index == shuffled.length && (index = 0);
+					setTimeout(function(){
+						clearTimeout(timer);
+						showing();
+					},1500);
+				}
+				else {
+					speak(item + '. Not correct');
+				}
+			}
+			shuffled = Object.keys(source).sort(()=>Math.random()-.5);
+			showing();
+		</script>
