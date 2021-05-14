@@ -11,14 +11,14 @@
 		<meta name="viewport" content="minimum-scale=1.0,width=device-width,maximum-scale=1,user-scalable=no" />
 		<style>
 			body {text-align:center;font-family:arial}
-			div {font-size:10vh;margin:3vh auto;}
+			div {font-size:10vh;margin:3vh auto;cursor:pointer}
 			ul {padding:0;font-size:3vh;margin:0 auto;}
 			li {cursor:pointer;text-transform:uppercase;list-style:none;border:solid grey 1px;width:50%;padding:2vh;margin:6vh auto}
 			li:active {background-color:#F1F1F1;}
 		</style>
 	</head>
 	<body ontouchstart>
-		<div id="word"></div>
+		<div id="word" onclick="speak(selected)"></div>
 		<ul></ul>
 		<script>
 			const source = {
